@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -76,3 +77,42 @@ ICP_WEIGHT_INDUSTRY_FIT = float(os.getenv("ICP_WEIGHT_INDUSTRY_FIT", "1.0"))
 ICP_WEIGHT_SIGNAL_STRENGTH = float(os.getenv("ICP_WEIGHT_SIGNAL_STRENGTH", "2.0"))
 ICP_WEIGHT_ROLE_RELEVANCE = float(os.getenv("ICP_WEIGHT_ROLE_RELEVANCE", "1.0"))
 ICP_WEIGHT_COMPANY_FIT = float(os.getenv("ICP_WEIGHT_COMPANY_FIT", "1.0"))
+
+# --- Milestone 2 — outreach sequences, Instantly / SMTP, metrics dashboard ---
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini").strip()
+INSTANTLY_API_KEY = os.getenv("INSTANTLY_API_KEY", "").strip()
+INSTANTLY_API_BASE = os.getenv("INSTANTLY_API_BASE", "https://api.instantly.ai").strip().rstrip("/")
+# Existing Instantly campaign UUID (create in UI; sequence steps use {{m2_stepN_*}} custom vars).
+MILESTONE2_INSTANTLY_CAMPAIGN_ID = os.getenv("MILESTONE2_INSTANTLY_CAMPAIGN_ID", "").strip()
+MILESTONE2_LEADS_XLSX = os.getenv("MILESTONE2_LEADS_XLSX", "").strip()
+MILESTONE2_MAX_LEADS = int(os.getenv("MILESTONE2_MAX_LEADS", "100"))
+MILESTONE2_MIN_LEADS = int(os.getenv("MILESTONE2_MIN_LEADS", "50"))
+MILESTONE2_SEQUENCE_STEPS = int(os.getenv("MILESTONE2_SEQUENCE_STEPS", "3"))
+# Comma-separated days after previous send (len should match steps - 1); e.g. 3,5 → step2 +3d, step3 +5d after prior.
+MILESTONE2_FOLLOWUP_GAP_DAYS = os.getenv("MILESTONE2_FOLLOWUP_GAP_DAYS", "3,5").strip()
+MILESTONE2_SEND = os.getenv("MILESTONE2_SEND", "").lower() in ("1", "true", "yes")
+MILESTONE2_DEMO_MODE = os.getenv("MILESTONE2_DEMO_MODE", "").lower() in ("1", "true", "yes")
+# Synthetic contact emails when column empty (non-deliverable host; for pipeline dry-runs only).
+MILESTONE2_DEMO_EMAIL_HOST = os.getenv(
+    "MILESTONE2_DEMO_EMAIL_HOST", "milestone2.demo.invalid"
+).strip()
+# Shown in copy + From display name; use dedicated outreach subdomain in production DNS.
+OUTREACH_SUBDOMAIN = os.getenv("OUTREACH_SUBDOMAIN", "").strip()
+OUTREACH_SENDER_NAME = os.getenv("OUTREACH_SENDER_NAME", "HVAC outreach").strip()
+OUTREACH_FROM_EMAIL = os.getenv("OUTREACH_FROM_EMAIL", "").strip()
+OUTREACH_SMTP_HOST = os.getenv("OUTREACH_SMTP_HOST", "").strip()
+OUTREACH_SMTP_PORT = int(os.getenv("OUTREACH_SMTP_PORT", "587"))
+OUTREACH_SMTP_USER = os.getenv("OUTREACH_SMTP_USER", "").strip()
+OUTREACH_SMTP_PASSWORD = os.getenv("OUTREACH_SMTP_PASSWORD", "").strip()
+_ROOT = Path(__file__).resolve().parent
+MILESTONE2_DB_PATH = os.getenv(
+    "MILESTONE2_DB_PATH",
+    str(_ROOT / "outreach_data" / "milestone2.sqlite"),
+).strip()
+MILESTONE2_DRAFTS_DIR = os.getenv(
+    "MILESTONE2_DRAFTS_DIR",
+    str(_ROOT / "outreach_data" / "drafts"),
+).strip()
+MILESTONE2_DASHBOARD_BIND = os.getenv("MILESTONE2_DASHBOARD_BIND", "127.0.0.1").strip()
+MILESTONE2_DASHBOARD_PORT = int(os.getenv("MILESTONE2_DASHBOARD_PORT", "8765"))

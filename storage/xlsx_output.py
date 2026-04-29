@@ -24,6 +24,8 @@ _FIELD_ORDER: tuple[str, ...] = (
     "icp_score",
     "job_relevance",
     "icp_rationale",
+    # Optional for Milestone 1; populate before Milestone 2 sends (enrichment / manual).
+    "email",
 )
 
 _NS_MAIN = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
@@ -34,6 +36,22 @@ def _q(tag: str) -> str:
 
 
 _DEFAULT_PATH = Path(__file__).resolve().parent.parent / "1.xlsx"
+
+
+def load_leads_from_xlsx(path: Path | str | None = None) -> list[dict]:
+    """Load lead dicts from ``1.xlsx`` (or ``path``), same column order as export."""
+    from utils.clean import normalize_record
+
+    src = Path(path) if path is not None else _DEFAULT_PATH
+    rows = _read_existing_data_rows(src)
+    out: list[dict] = []
+    for cells in rows:
+        d = {
+            field: (cells[i] if i < len(cells) else "")
+            for i, field in enumerate(_FIELD_ORDER)
+        }
+        out.append(normalize_record(d))
+    return out
 
 
 def save_to_xlsx(records: list[dict], path: Path | str | None = None) -> None:

@@ -10,4 +10,5 @@ def normalize_record(record: dict) -> dict:
         "job_title": str(record.get("job_title", "") or "").strip(),
         "job_relevance": str(record.get("job_relevance", "") or "").strip(),
         "icp_rationale": str(record.get("icp_rationale", "") or "").strip(),
+        "email": str(record.get("email", "") or "").strip(),
     }
